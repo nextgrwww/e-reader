@@ -60,6 +60,36 @@
         const Upload = (props) => <IconWrapper {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></IconWrapper>;
         const DownloadCloud = (props) => <IconWrapper {...props}><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></IconWrapper>;
 
+        // --- INTELLIGENT WORD WISE ALGORITHM ---
+        // A stop-list of highly common intermediate/long English words to ignore
+        const COMMON_WORDS = new Set("people because should things always around another something between thought through nothing without against anything everything everyone someone understand important different information together beautiful themselves probably remember especially actually already although american anyway become before behind believe benefit business cannot certain certainly change character children common community company compare complete condition consider continue control country course create culture current customer daughter decide decision describe design determine develop difference difficult direct direction discover discuss disease doctor during economic economy education effect effort election energy enough environment establish evening evidence exactly example executive expect experience explain family federal feeling figure financial foreign former forward friend future general generation government ground happen health history hospital however husband include including increase indeed indicate individual industry inside instead institution interest international interview investment involve knowledge language lawyer letter likely listen little machine majority manage management manager market material matter measure medical meeting member memory message method middle military million minute mission moment morning mother movement nation national natural nature nearly necessary network number office officer official operation opportunity option organization others outside parent participant particular particularly partner patient pattern percent perform performance perhaps period person personal physical picture player police policy political politics popular population position positive possible practice prepare present president pressure pretty prevent private probably problem process produce product production professional professor program project property protect provide public purpose quality question quickly reason receive recent recently recognize record relate relationship religious remain remove report represent require research resource respond response responsibility result return reveal school science scientist season second section security senior series service several sexual should shoulder significant similar simple simply single sister situation social society soldier somebody sometimes source southern special specific speech spring standard statement station status street strong student studio system target teacher technology television theory therefore though throughout toward traditional training treatment trouble usually various weapon weight western whatever whether window within woman wonder worker would writer yourself".split(" "));
+
+        const isDifficultWord = (word) => {
+            const lowerWord = word.toLowerCase();
+            if (lowerWord.length < 6) return false;
+            if (COMMON_WORDS.has(lowerWord)) return false;
+            
+            // Syllable counting heuristic
+            let w = lowerWord.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, ''); // Remove silent e, ed, es
+            w = w.replace(/^y/, '');
+            const syllables = w.match(/[aeiouy]{1,2}/g)?.length || 1;
+            
+            // Consider difficult if 3+ syllables or very long (9+) and not in common list
+            return syllables >= 3 || lowerWord.length >= 9;
+        };
+
+        const STORAGE_KEY = 'kindle_web_data_v1';
+
+        const dataURItoArrayBuffer = (dataURI) => {
+            const byteString = atob(dataURI.split(',')[1]);
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return ab;
+        };
+
 
         // --- MOCK DATA ---
         const INITIAL_BOOKS = [
@@ -71,7 +101,16 @@
 
         function App() {
           const [view, setView] = useState('library'); // 'home', 'library', 'reader'
-          const [books, setBooks] = useState(INITIAL_BOOKS);
+          
+          const [books, setBooks] = useState(() => {
+              const saved = localStorage.getItem(STORAGE_KEY);
+              if (saved) {
+                  try {
+                      return JSON.parse(saved).books || INITIAL_BOOKS;
+                  } catch(e) {}
+              }
+              return INITIAL_BOOKS;
+          });
           const [currentBook, setCurrentBook] = useState(null);
           
           // Kindle Settings
@@ -82,7 +121,15 @@
           const [aaMenuOpen, setAaMenuOpen] = useState(false);
           
           // Word Wise Settings
-          const [wordWiseData, setWordWiseData] = useState({});
+          const [wordWiseData, setWordWiseData] = useState(() => {
+              const saved = localStorage.getItem(STORAGE_KEY);
+              if (saved) {
+                  try {
+                      return JSON.parse(saved).wordWiseData || {};
+                  } catch(e) {}
+              }
+              return {};
+          });
           const [wordWiseEnabled, setWordWiseEnabled] = useState(false);
           const [autoWordWiseEnabled, setAutoWordWiseEnabled] = useState(false);
           const wordWiseRef = useRef({ data: {}, enabled: false, autoEnabled: false });
@@ -102,6 +149,33 @@
           const viewerRef = useRef(null);
           const fileInputRef = useRef(null);
           const wordWiseFileInputRef = useRef(null);
+
+          // Persist Data to LocalStorage automatically
+          useEffect(() => {
+              const data = { books, wordWiseData };
+              try {
+                  // Save everything, including Base64 files, to a single JSON string
+                  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+              } catch (e) {
+                  console.warn("Storage full. Saving metadata without files.", e);
+                  try {
+                      // If quota exceeds (5MB limit), strip huge file payloads but keep library metadata & words
+                      const strippedBooks = books.map(b => ({...b, fileData: null}));
+                      localStorage.setItem(STORAGE_KEY, JSON.stringify({books: strippedBooks, wordWiseData}));
+                  } catch(e2) {}
+              }
+          }, [books, wordWiseData]);
+
+          // Global Keyboard Navigation for Arrow Keys
+          useEffect(() => {
+              const handleKeyDown = (e) => {
+                  if (view !== 'reader' || !renditionRef.current) return;
+                  if (e.key === 'ArrowLeft') renditionRef.current.prev();
+                  if (e.key === 'ArrowRight') renditionRef.current.next();
+              };
+              window.addEventListener('keydown', handleKeyDown);
+              return () => window.removeEventListener('keydown', handleKeyDown);
+          }, [view]);
 
           // Keep refs synced for epub.js hooks to access latest state without stale closures
           useEffect(() => {
@@ -154,18 +228,25 @@
             if (!file) return;
 
             const ext = file.name.split('.').pop().toLowerCase();
-            const newBook = {
-              id: Math.random().toString(36).substr(2, 9),
-              title: file.name.replace(`.${ext}`, ''),
-              author: 'Unknown Author',
-              format: ext,
-              file: file,
-              cover: null, // Would extract in a full implementation
-              progress: 0
-            };
+            const reader = new FileReader();
+            
+            reader.onload = (event) => {
+              const dataUrl = event.target.result;
+              const newBook = {
+                id: Math.random().toString(36).substr(2, 9),
+                title: file.name.replace(`.${ext}`, ''),
+                author: 'Unknown Author',
+                format: ext,
+                fileData: dataUrl,
+                cover: null,
+                progress: 0
+              };
 
-            setBooks([newBook, ...books]);
-            openBook(newBook);
+              setBooks(prev => [newBook, ...prev]);
+              openBook(newBook);
+            };
+            
+            reader.readAsDataURL(file); // Encode file to persist natively in local storage without Blob refs
           };
 
           const handleWordWiseUpload = (e) => {
@@ -292,8 +373,8 @@
             if (!doc) return;
 
             const text = doc.body.textContent || "";
-            // Find words 8+ characters long
-            const matches = text.match(/\b[a-zA-Z]{8,}\b/g) || [];
+            // Find alphabetic words 6+ characters long
+            const matches = text.match(/\b[a-zA-Z]{6,}\b/g) || [];
             const uniqueWords = [...new Set(matches.map(w => w.toLowerCase()))];
 
             if (!attemptedWordsRef.current[bookId]) {
@@ -302,13 +383,17 @@
             const attempted = attemptedWordsRef.current[bookId];
             const currentDict = wordWiseRef.current.data[bookId] || {};
 
-            // Filter out words we already attempted to fetch or already know
-            const wordsToFetch = uniqueWords.filter(w => !attempted.has(w) && !currentDict[w]);
+            // Filter out words using our new clever heuristic algorithm
+            const wordsToFetch = uniqueWords.filter(w => 
+              !attempted.has(w) && 
+              !currentDict[w] && 
+              isDifficultWord(w)
+            );
 
             if (wordsToFetch.length === 0) return;
 
-            // Limit to 5 words per page/chapter load to avoid massive API lag or rate limits
-            const slice = wordsToFetch.slice(0, 5);
+            // Fetch up to 6 intelligently filtered words per page/chapter load
+            const slice = wordsToFetch.slice(0, 6);
             slice.forEach(w => attempted.add(w));
 
             let newDefs = {};
@@ -351,21 +436,14 @@
           useEffect(() => {
             if (view === 'reader' && currentBook && currentBook.format === 'epub' && epubLoaded && viewerRef.current) {
               // Don't try to render mock books without a real file
-              if (!currentBook.file) return;
+              if (!currentBook.fileData) return;
 
               // Clean up previous
               if (renditionRef.current) renditionRef.current.destroy();
 
               const renderBook = async () => {
                 try {
-                  // Robustly read the File as an ArrayBuffer for epub.js
-                  const arrayBuffer = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.onerror = reject;
-                    reader.readAsArrayBuffer(currentBook.file);
-                  });
-
+                  const arrayBuffer = dataURItoArrayBuffer(currentBook.fileData);
                   const bookObj = window.ePub(arrayBuffer); 
                   const rendition = bookObj.renderTo(viewerRef.current, {
                     width: '100%',
@@ -402,34 +480,70 @@
                      }
                   });
 
-                  // Kindle tap zones implementation
+                  // Kindle tap zones implementation (Menu ONLY, no flip on click)
                   rendition.on('click', (e) => {
-                    const width = window.innerWidth;
                     const height = window.innerHeight;
-                    const x = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
                     const y = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
 
                     if (y < height * 0.15) {
                       // Top 15% taps open menu
                       setMenuOpen(prev => !prev);
                       setAaMenuOpen(false);
-                    } else if (x < width * 0.3) {
-                      // Left 30% goes back
-                      rendition.prev();
-                    } else if (x > width * 0.3) {
-                      // Right 70% goes forward (Kindle style)
-                      rendition.next();
                     }
                   });
 
-                  // Setup touch events for iframe
+                  // Setup touch events for iframe (Swipe)
                   rendition.on('touchstart', (e) => {
                      rendition.touchStartX = e.changedTouches[0].screenX;
                   });
                   rendition.on('touchend', (e) => {
                      const touchEndX = e.changedTouches[0].screenX;
-                     if (rendition.touchStartX - touchEndX > 50) rendition.next();
-                     if (rendition.touchStartX - touchEndX < -50) rendition.prev();
+                     if (rendition.touchStartX - touchEndX > 50) rendition.next(); // swipe left
+                     if (rendition.touchStartX - touchEndX < -50) rendition.prev(); // swipe right
+                  });
+                  
+                  // Setup Keyboard inside iframe
+                  rendition.on('keyup', (e) => {
+                      if (e.key === 'ArrowLeft') rendition.prev();
+                      if (e.key === 'ArrowRight') rendition.next();
+                  });
+
+                  // Long press / Tap and Hold for Word Wise (Native text selection triggers this)
+                  rendition.on('selected', async (cfiRange, contents) => {
+                      const text = rendition.getRange(cfiRange).toString().trim();
+                      // Clear selection immediately to mimic app behavior
+                      contents.window.getSelection().removeAllRanges();
+
+                      if (!text || text.includes(' ') || text.length < 2) return;
+                      
+                      const cleanWord = text.replace(/[^a-zA-Z]/g, '').toLowerCase();
+                      const bookId = currentBookRef.current?.id;
+                      
+                      if (cleanWord.length < 2 || !bookId) return;
+
+                      try {
+                          const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
+                          if (res.ok) {
+                              const json = await res.json();
+                              const def = json[0]?.meanings[0]?.definitions[0]?.definition;
+                              if (def) {
+                                  let shortDef = def.split(' ').slice(0, 4).join(' ');
+                                  if (def.split(' ').length > 4) shortDef += '...';
+                                  
+                                  const newDefs = { [cleanWord]: shortDef };
+                                  
+                                  setWordWiseData(prev => ({
+                                      ...prev,
+                                      [bookId]: { ...(prev[bookId] || {}), ...newDefs }
+                                  }));
+                                  
+                                  setWordWiseEnabled(true);
+                                  applyWordWiseToContents(contents, newDefs);
+                              }
+                          }
+                      } catch (e) {
+                          console.error("Tap & Hold WW fetch failed", e);
+                      }
                   });
 
                 } catch (err) {
@@ -443,7 +557,7 @@
 
           // Apply Reader Settings Dynamically
           useEffect(() => {
-            if (renditionRef.current && currentBook?.format === 'epub' && currentBook?.file) {
+            if (renditionRef.current && currentBook?.format === 'epub' && currentBook?.fileData) {
               const { themes } = renditionRef.current;
               themes.fontSize(`${readerSettings.fontSize}%`);
               themes.font(readerSettings.fontFamily);
@@ -453,7 +567,7 @@
 
           // Force re-render of the current page ONLY when Word Wise toggle changes
           useEffect(() => {
-            if (renditionRef.current && epubLoaded && currentBook?.file && renditionRef.current.location) {
+            if (renditionRef.current && epubLoaded && currentBook?.fileData && renditionRef.current.location) {
                try {
                  const currentLocation = renditionRef.current.location.start.cfi;
                  if (currentLocation) renditionRef.current.display(currentLocation);
@@ -465,7 +579,7 @@
 
           // Handle Auto Word Wise Toggle activation
           useEffect(() => {
-            if (autoWordWiseEnabled && currentBook?.file && renditionRef.current?.location) {
+            if (autoWordWiseEnabled && currentBook?.fileData && renditionRef.current?.location) {
                setWordWiseEnabled(true); // Ensure main word wise is on
                
                // Trigger fetch on currently active contents immediately
@@ -478,7 +592,7 @@
 
           // Handle generic tap for non-epub views
           const handleGenericReaderTap = (e) => {
-            if (currentBook?.format === 'epub' && currentBook?.file) return; // Handled by epub.js iframe
+            if (currentBook?.format === 'epub' && currentBook?.fileData) return; // Handled by epub.js iframe
             const height = window.innerHeight;
             const y = e.clientY;
             if (y < height * 0.2) {
@@ -711,24 +825,23 @@
           const NonEpubFallback = () => {
             if (!currentBook) return null;
 
-            if (currentBook.format === 'epub' && !currentBook.file) {
+            if (currentBook.format === 'epub' && !currentBook.fileData) {
               return (
                  <div className={`flex flex-col items-center justify-center h-full space-y-4 text-center p-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                    <BookOpen size={48} className="text-gray-400 opacity-50 mb-4" />
                    <h2 className="text-2xl font-serif font-bold">Demo Book Placeholder</h2>
                    <p className="max-w-md text-lg">
-                     This is a mock library item. To see the reading experience, please tap the <strong>+ Upload</strong> button on the Library screen to select an actual `.epub` file from your device.
+                     This is a mock library item, or its file data could not be saved to local storage. To see the reading experience, please tap the <strong>+ Upload</strong> button on the Library screen to select an actual `.epub` file from your device.
                    </p>
                  </div>
               );
             }
 
             if (currentBook.format === 'pdf') {
-              const pdfUrl = currentBook.file ? URL.createObjectURL(currentBook.file) : '';
               return (
                 <div className="w-full h-full bg-white relative">
-                  {currentBook.file ? (
-                    <iframe src={`${pdfUrl}#toolbar=0&navpanes=0`} className="w-full h-full border-none" title="PDF Viewer" />
+                  {currentBook.fileData ? (
+                    <iframe src={`${currentBook.fileData}#toolbar=0&navpanes=0`} className="w-full h-full border-none" title="PDF Viewer" />
                   ) : (
                     <div className={`flex flex-col items-center justify-center h-full space-y-4 text-center p-8 ${isDarkMode ? 'text-gray-300 bg-[#111111]' : 'text-gray-600 bg-white'}`}>
                        <BookOpen size={48} className="text-gray-400" />
@@ -782,7 +895,7 @@
                   <ReaderOverlayMenu />
                   
                   <div className="flex-1 w-full h-full relative z-10">
-                    {currentBook?.format === 'epub' && currentBook?.file ? (
+                    {currentBook?.format === 'epub' && currentBook?.fileData ? (
                       <div ref={viewerRef} className="w-full h-full absolute inset-0" />
                     ) : (
                       <NonEpubFallback />
