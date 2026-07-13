@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kindle Reader Web</title>
+    <title>Kindle Reader Pro</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load React and ReactDOM -->
@@ -38,7 +38,6 @@
     <script type="text/babel">
         const { useState, useEffect, useRef, useCallback } = React;
 
-        // --- INLINE SVG ICONS (Replacing lucide-react) ---
         const IconWrapper = ({ size = 24, className = "", children }) => (
             <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
                 {children}
@@ -52,7 +51,7 @@
         const ChevronLeft = (props) => <IconWrapper {...props}><path d="m15 18-6-6 6-6"/></IconWrapper>;
         const Home = (props) => <IconWrapper {...props}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></IconWrapper>;
         const BookOpen = (props) => <IconWrapper {...props}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></IconWrapper>;
-        const List = (props) => <IconWrapper {...props}><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></IconWrapper>;
+        const ListIcon = (props) => <IconWrapper {...props}><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></IconWrapper>;
         const Grid = (props) => <IconWrapper {...props}><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></IconWrapper>;
         const Type = (props) => <IconWrapper {...props}><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></IconWrapper>;
         const Moon = (props) => <IconWrapper {...props}><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></IconWrapper>;
@@ -60,26 +59,22 @@
         const Upload = (props) => <IconWrapper {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></IconWrapper>;
         const DownloadCloud = (props) => <IconWrapper {...props}><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></IconWrapper>;
         const Columns = (props) => <IconWrapper {...props}><rect x="2" y="3" width="20" height="18" rx="2" ry="2"/><line x1="12" y1="3" x2="12" y2="21"/></IconWrapper>;
+        const Notebook = (props) => <IconWrapper {...props}><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M16 2v20"/></IconWrapper>;
+        const Palette = (props) => <IconWrapper {...props}><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></IconWrapper>;
 
-        // --- INTELLIGENT WORD WISE ALGORITHM ---
-        // A stop-list of highly common intermediate/long English words to ignore
         const COMMON_WORDS = new Set("people because should things always around another something between thought through nothing without against anything everything everyone someone understand important different information together beautiful themselves probably remember especially actually already although american anyway become before behind believe benefit business cannot certain certainly change character children common community company compare complete condition consider continue control country course create culture current customer daughter decide decision describe design determine develop difference difficult direct direction discover discuss disease doctor during economic economy education effect effort election energy enough environment establish evening evidence exactly example executive expect experience explain family federal feeling figure financial foreign former forward friend future general generation government ground happen health history hospital however husband include including increase indeed indicate individual industry inside instead institution interest international interview investment involve knowledge language lawyer letter likely listen little machine majority manage management manager market material matter measure medical meeting member memory message method middle military million minute mission moment morning mother movement nation national natural nature nearly necessary network number office officer official operation opportunity option organization others outside parent participant particular particularly partner patient pattern percent perform performance perhaps period person personal physical picture player police policy political politics popular population position positive possible practice prepare present president pressure pretty prevent private probably problem process produce product production professional professor program project property protect provide public purpose quality question quickly reason receive recent recently recognize record relate relationship religious remain remove report represent require research resource respond response responsibility result return reveal school science scientist season second section security senior series service several sexual should shoulder significant similar simple simply single sister situation social society soldier somebody sometimes source southern special specific speech spring standard statement station status street strong student studio system target teacher technology television theory therefore though throughout toward traditional training treatment trouble usually various weapon weight western whatever whether window within woman wonder worker would writer yourself".split(" "));
 
         const isDifficultWord = (word) => {
             const lowerWord = word.toLowerCase();
             if (lowerWord.length < 6) return false;
             if (COMMON_WORDS.has(lowerWord)) return false;
-            
-            // Syllable counting heuristic
-            let w = lowerWord.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, ''); // Remove silent e, ed, es
+            let w = lowerWord.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
             w = w.replace(/^y/, '');
             const syllables = w.match(/[aeiouy]{1,2}/g)?.length || 1;
-            
-            // Consider difficult if 3+ syllables or very long (9+) and not in common list
             return syllables >= 3 || lowerWord.length >= 9;
         };
 
-        const STORAGE_KEY = 'kindle_web_data_v1';
+        const STORAGE_KEY = 'kindle_web_data_v2';
 
         const dataURItoArrayBuffer = (dataURI) => {
             const byteString = atob(dataURI.split(',')[1]);
@@ -91,123 +86,98 @@
             return ab;
         };
 
-
-        // --- MOCK DATA ---
         const INITIAL_BOOKS = [
           { id: '1', title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', format: 'epub', cover: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=300&h=450', progress: 45 },
           { id: '2', title: '1984', author: 'George Orwell', format: 'pdf', cover: 'https://images.unsplash.com/photo-1524578974052-094fa8ec629e?auto=format&fit=crop&q=80&w=300&h=450', progress: 12 },
-          { id: '3', title: 'Pride and Prejudice', author: 'Jane Austen', format: 'mobi', cover: 'https://images.unsplash.com/photo-1511108690759-009324a5033d?auto=format&fit=crop&q=80&w=300&h=450', progress: 88 },
-          { id: '4', title: 'Dune', author: 'Frank Herbert', format: 'epub', cover: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=300&h=450', progress: 0 },
         ];
 
         function App() {
-          const [view, setView] = useState('library'); // 'home', 'library', 'reader'
-          
-          const [books, setBooks] = useState(() => {
-              const saved = localStorage.getItem(STORAGE_KEY);
-              if (saved) {
-                  try {
-                      return JSON.parse(saved).books || INITIAL_BOOKS;
-                  } catch(e) {}
-              }
-              return INITIAL_BOOKS;
-          });
-          const [currentBook, setCurrentBook] = useState(null);
-          
-          // Kindle Settings
+          // System & View State
+          const [view, setView] = useState('library');
           const [time, setTime] = useState(new Date());
-          const [isDarkMode, setIsDarkMode] = useState(false);
           const [libraryViewType, setLibraryViewType] = useState('grid');
           const [menuOpen, setMenuOpen] = useState(false);
           const [aaMenuOpen, setAaMenuOpen] = useState(false);
-          
-          // Display Layout Settings
           const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight);
-          const [twoPageView, setTwoPageView] = useState(() => {
-              const saved = localStorage.getItem(STORAGE_KEY);
-              if (saved) {
-                  try {
-                      return JSON.parse(saved).twoPageView || false;
-                  } catch(e) {}
-              }
-              return false;
-          });
-          
-          // Word Wise Settings
-          const [wordWiseData, setWordWiseData] = useState(() => {
-              const saved = localStorage.getItem(STORAGE_KEY);
-              if (saved) {
-                  try {
-                      return JSON.parse(saved).wordWiseData || {};
-                  } catch(e) {}
-              }
-              return {};
-          });
+
+          // Deep Persisted State
+          const [books, setBooks] = useState(INITIAL_BOOKS);
+          const [currentBook, setCurrentBook] = useState(null);
+          const [theme, setTheme] = useState('light'); // 'light', 'dark', 'sepia'
+          const [twoPageView, setTwoPageView] = useState(false);
+          const [wordWiseData, setWordWiseData] = useState({});
+          const [bookmarks, setBookmarks] = useState({});
+          const [characters, setCharacters] = useState({});
           const [wordWiseEnabled, setWordWiseEnabled] = useState(false);
           const [autoWordWiseEnabled, setAutoWordWiseEnabled] = useState(false);
-          const wordWiseRef = useRef({ data: {}, enabled: false, autoEnabled: false });
+
+          // Feature States
+          const [contextMenu, setContextMenu] = useState(null); // {x, y, text, cfiRange}
+          const [notebookOpen, setNotebookOpen] = useState(false);
+          const [notebookTab, setNotebookTab] = useState('bookmarks'); // 'bookmarks', 'characters'
+          const [searchResults, setSearchResults] = useState(null);
+          const [isSearching, setIsSearching] = useState(false);
+
+          // Refs
+          const wordWiseRef = useRef({ data: {}, enabled: false, autoEnabled: false, theme: 'light' });
           const attemptedWordsRef = useRef({});
-          
           const currentBookRef = useRef(null);
           const savedLocationRef = useRef(null);
           const bookRef = useRef(null);
-
-          // Reader Settings
-          const [readerSettings, setReaderSettings] = useState({
-            fontSize: 100, // percentage
-            fontFamily: 'ui-serif, Georgia, serif', // Default Bookerly-ish
-            margin: 40,
-          });
-
-          // External Library States
-          const [epubLoaded, setEpubLoaded] = useState(false);
           const renditionRef = useRef(null);
           const viewerRef = useRef(null);
           const fileInputRef = useRef(null);
           const wordWiseFileInputRef = useRef(null);
+          const lastSelectionRef = useRef(null); // For context menu safety
 
-          // Listen for Orientation/Resize Changes
+          // Load Initial Data
+          useEffect(() => {
+              const saved = localStorage.getItem(STORAGE_KEY);
+              if (saved) {
+                  try {
+                      const parsed = JSON.parse(saved);
+                      if (parsed.books) setBooks(parsed.books);
+                      if (parsed.theme) setTheme(parsed.theme);
+                      if (parsed.twoPageView) setTwoPageView(parsed.twoPageView);
+                      if (parsed.wordWiseData) setWordWiseData(parsed.wordWiseData);
+                      if (parsed.bookmarks) setBookmarks(parsed.bookmarks);
+                      if (parsed.characters) setCharacters(parsed.characters);
+                  } catch(e) { console.error("Corrupted local storage", e); }
+              }
+          }, []);
+
+          // Auto-Persist Data
+          useEffect(() => {
+              const data = { books, theme, twoPageView, wordWiseData, bookmarks, characters };
+              try {
+                  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+              } catch (e) {
+                  console.warn("Storage full. Stripping files.");
+                  try {
+                      const strippedBooks = books.map(b => ({...b, fileData: null}));
+                      localStorage.setItem(STORAGE_KEY, JSON.stringify({...data, books: strippedBooks}));
+                  } catch(e2) {}
+              }
+          }, [books, theme, twoPageView, wordWiseData, bookmarks, characters]);
+
+          // Resize Listener
           useEffect(() => {
               const handleResize = () => setIsLandscape(window.innerWidth > window.innerHeight);
               window.addEventListener('resize', handleResize);
               return () => window.removeEventListener('resize', handleResize);
           }, []);
 
-          // Persist Data to LocalStorage automatically
+          // Sync Refs for epub hooks
           useEffect(() => {
-              const data = { books, wordWiseData, twoPageView };
-              try {
-                  // Save everything, including Base64 files, to a single JSON string
-                  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-              } catch (e) {
-                  console.warn("Storage full. Saving metadata without files.", e);
-                  try {
-                      // If quota exceeds (5MB limit), strip huge file payloads but keep library metadata & words
-                      const strippedBooks = books.map(b => ({...b, fileData: null}));
-                      localStorage.setItem(STORAGE_KEY, JSON.stringify({books: strippedBooks, wordWiseData, twoPageView}));
-                  } catch(e2) {}
-              }
-          }, [books, wordWiseData, twoPageView]);
-
-          // Global Keyboard Navigation for Arrow Keys
-          useEffect(() => {
-              const handleKeyDown = (e) => {
-                  if (view !== 'reader' || !renditionRef.current) return;
-                  if (e.key === 'ArrowLeft') renditionRef.current.prev();
-                  if (e.key === 'ArrowRight') renditionRef.current.next();
-              };
-              window.addEventListener('keydown', handleKeyDown);
-              return () => window.removeEventListener('keydown', handleKeyDown);
-          }, [view]);
-
-          // Keep refs synced for epub.js hooks to access latest state without stale closures
-          useEffect(() => {
-            wordWiseRef.current = { data: wordWiseData, enabled: wordWiseEnabled, autoEnabled: autoWordWiseEnabled };
+            wordWiseRef.current = { data: wordWiseData, enabled: wordWiseEnabled, autoEnabled: autoWordWiseEnabled, theme };
             currentBookRef.current = currentBook;
-          }, [wordWiseData, wordWiseEnabled, autoWordWiseEnabled, currentBook]);
+          }, [wordWiseData, wordWiseEnabled, autoWordWiseEnabled, theme, currentBook]);
 
-          // Load epub.js dynamically
+          // Global Time & Load EPUB
+          const [epubLoaded, setEpubLoaded] = useState(false);
           useEffect(() => {
+            const timer = setInterval(() => setTime(new Date()), 60000);
+            
             const loadScript = (src) => new Promise(resolve => {
               if (document.querySelector(`script[src="${src}"]`)) return resolve();
               const s = document.createElement('script');
@@ -216,25 +186,44 @@
               document.head.appendChild(s);
             });
 
-            Promise.all([
-              loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js')
-            ])
+            Promise.all([loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js')])
             .then(() => loadScript('https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js'))
             .then(() => setEpubLoaded(true))
             .catch(err => console.error("Failed to load epub.js", err));
-          }, []);
 
-          // Update Top Bar Time
-          useEffect(() => {
-            const timer = setInterval(() => setTime(new Date()), 60000);
             return () => clearInterval(timer);
           }, []);
+
+          // Global Keyboard Navigation
+          useEffect(() => {
+              const handleKeyDown = (e) => {
+                  if (view !== 'reader' || !renditionRef.current || contextMenu || notebookOpen) return;
+                  if (e.key === 'ArrowLeft') renditionRef.current.prev();
+                  if (e.key === 'ArrowRight') renditionRef.current.next();
+              };
+              window.addEventListener('keydown', handleKeyDown);
+              return () => window.removeEventListener('keydown', handleKeyDown);
+          }, [view, contextMenu, notebookOpen]);
+
+          const [readerSettings, setReaderSettings] = useState({
+            fontSize: 100,
+            fontFamily: 'ui-serif, Georgia, serif',
+            margin: 40,
+          });
+
+          const getThemeStyles = () => {
+              if (theme === 'dark') return { bg: 'bg-[#111111]', text: 'text-[#f4f4f4]', border: 'border-gray-800', menu: 'bg-[#1a1a1a] text-white', hover: 'hover:bg-gray-800', wwBg: '#1a1a1a', wwColor: '#f4f4f4' };
+              if (theme === 'sepia') return { bg: 'bg-[#f4ecd8]', text: 'text-[#5b4636]', border: 'border-[#d4c8b8]', menu: 'bg-[#f4ecd8] text-[#5b4636]', hover: 'hover:bg-[#e4d8c8]', wwBg: '#e4d8c8', wwColor: '#5b4636' };
+              return { bg: 'bg-[#f4f4f4]', text: 'text-[#111111]', border: 'border-gray-300', menu: 'bg-white text-black', hover: 'hover:bg-gray-200', wwBg: '#ffffff', wwColor: '#111111' };
+          };
+          const currentTheme = getThemeStyles();
 
           const openBook = (book) => {
             setCurrentBook(book);
             setView('reader');
             setMenuOpen(false);
             setAaMenuOpen(false);
+            setNotebookOpen(false);
             savedLocationRef.current = null;
             if (bookRef.current) {
                 bookRef.current.destroy();
@@ -243,159 +232,159 @@
           };
 
           const closeReader = () => {
-            if (renditionRef.current) {
-              renditionRef.current.destroy();
-              renditionRef.current = null;
-            }
-            if (bookRef.current) {
-              bookRef.current.destroy();
-              bookRef.current = null;
-            }
+            if (renditionRef.current) { renditionRef.current.destroy(); renditionRef.current = null; }
+            if (bookRef.current) { bookRef.current.destroy(); bookRef.current = null; }
             setView('library');
             setCurrentBook(null);
+            setContextMenu(null);
           };
 
           const handleFileUpload = (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const ext = file.name.split('.').pop().toLowerCase();
             const reader = new FileReader();
-            
             reader.onload = (event) => {
-              const dataUrl = event.target.result;
               const newBook = {
                 id: Math.random().toString(36).substr(2, 9),
                 title: file.name.replace(`.${ext}`, ''),
                 author: 'Unknown Author',
                 format: ext,
-                fileData: dataUrl,
+                fileData: event.target.result,
                 cover: null,
                 progress: 0
               };
-
               setBooks(prev => [newBook, ...prev]);
               openBook(newBook);
             };
-            
-            reader.readAsDataURL(file); // Encode file to persist natively in local storage without Blob refs
+            reader.readAsDataURL(file);
           };
 
-          const handleWordWiseUpload = (e) => {
-            const file = e.target.files[0];
-            if (!file || !currentBook) return;
-
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              try {
-                const json = JSON.parse(event.target.result);
-                // Normalize keys to lowercase for matching
-                const normalizedJson = {};
-                for (const key in json) {
-                  normalizedJson[key.toLowerCase()] = json[key];
-                }
-                
-                setWordWiseData(prev => ({...prev, [currentBook.id]: normalizedJson}));
-                setWordWiseEnabled(true);
-                
-                // Manually trigger refresh to apply the newly uploaded dictionary
-                setTimeout(() => {
-                   if (renditionRef.current && renditionRef.current.location) {
-                     try { renditionRef.current.display(renditionRef.current.location.start.cfi); } catch(e){}
-                   }
-                }, 100);
-              } catch (err) {
-                console.error("Invalid Word Wise JSON", err);
-                alert("Invalid JSON file format. Please upload a key-value dictionary.");
+          const handleContextMenuAction = (action) => {
+              if (!contextMenu || !currentBook) return;
+              
+              if (action === 'copy') {
+                  navigator.clipboard.writeText(contextMenu.text).catch(e => console.warn("Clipboard failed", e));
+              } else if (action === 'bookmark') {
+                  // Calculate rough percentage if available
+                  let pct = 0;
+                  try {
+                      if (bookRef.current && bookRef.current.locations && bookRef.current.locations.length() > 0) {
+                          pct = Math.round(bookRef.current.locations.percentageFromCfi(contextMenu.cfiRange) * 100);
+                      }
+                  } catch(e){}
+                  
+                  const newBookmark = { id: Date.now(), text: contextMenu.text, cfi: contextMenu.cfiRange, percentage: pct };
+                  setBookmarks(prev => ({ ...prev, [currentBook.id]: [...(prev[currentBook.id] || []), newBookmark] }));
+              } else if (action === 'character') {
+                  const charName = contextMenu.text;
+                  setCharacters(prev => {
+                      const exist = prev[currentBook.id] || [];
+                      if (!exist.includes(charName)) return { ...prev, [currentBook.id]: [...exist, charName] };
+                      return prev;
+                  });
               }
-            };
-            reader.readAsText(file);
-            e.target.value = null;
+              setContextMenu(null);
+              // Ensure selection is cleared natively so it doesn't linger
+              try { renditionRef.current.getContents()[0].window.getSelection().removeAllRanges(); } catch(e){}
+          };
+
+          const searchCharacter = async (charName) => {
+              setIsSearching(true);
+              setSearchResults([]);
+              try {
+                  const results = [];
+                  const spine = bookRef.current.spine;
+                  for (let i = 0; i < spine.length; i++) {
+                      const item = spine.get(i);
+                      await item.load(bookRef.current.load.bind(bookRef.current));
+                      const matches = item.find(charName);
+                      if (matches && matches.length) {
+                          results.push(...matches);
+                      }
+                      item.unload(); // Critical to prevent OOM
+                  }
+                  setSearchResults(results);
+              } catch (e) {
+                  console.error("Search failed", e);
+              }
+              setIsSearching(false);
           };
 
           const applyWordWiseToContents = (contents, dictionary) => {
             const doc = contents.document;
             if (!doc || !dictionary || Object.keys(dictionary).length === 0) return;
 
-            // Inject styles for Word Wise (ruby tags)
             const styleId = 'word-wise-style';
-            if (!doc.getElementById(styleId)) {
-              const style = doc.createElement('style');
+            let style = doc.getElementById(styleId);
+            if (!style) {
+              style = doc.createElement('style');
               style.id = styleId;
-              style.textContent = `
-                body { line-height: 2 !important; } /* Make room for annotations */
-                ruby.word-wise { ruby-align: center; }
-                rt.word-wise-def {
-                  font-size: 0.55em;
-                  opacity: 0.6;
-                  color: inherit;
-                  font-family: sans-serif;
-                  font-weight: normal;
-                  user-select: none;
-                }
-              `;
               doc.head.appendChild(style);
             }
+            
+            // The tooltip CSS is injected dynamically to respond to themes
+            style.textContent = `
+              body { line-height: 2 !important; }
+              ruby.word-wise { position: relative; cursor: pointer; }
+              rt.word-wise-def {
+                font-size: 0.55em; opacity: 0.8; color: inherit; font-family: sans-serif; font-weight: normal; user-select: none;
+                display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+              }
+              /* Hover expansion logic */
+              ruby.word-wise:hover rt.word-wise-def, ruby.word-wise:active rt.word-wise-def {
+                white-space: normal; overflow: visible; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+                background-color: var(--ww-bg, #fff); color: var(--ww-color, #000); padding: 4px 6px; border-radius: 4px; 
+                border: 1px solid var(--ww-color, #000); z-index: 9999; width: max-content; max-width: 180px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.2); font-size: 0.65rem; line-height: 1.2; text-align: center;
+              }
+            `;
 
-            // Build highly optimized Regex for all dictionary words
+            // Inject theme variables
+            const { theme } = wordWiseRef.current;
+            const bg = theme === 'dark' ? '#1a1a1a' : theme === 'sepia' ? '#e4d8c8' : '#ffffff';
+            const color = theme === 'dark' ? '#f4f4f4' : theme === 'sepia' ? '#5b4636' : '#111111';
+            doc.documentElement.style.setProperty('--ww-bg', bg);
+            doc.documentElement.style.setProperty('--ww-color', color);
+
             const words = Object.keys(dictionary).sort((a, b) => b.length - a.length);
             const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const pattern = new RegExp(`\\b(${words.map(escapeRegExp).join('|')})\\b`, 'gi');
 
-            // Walk through all text nodes
             const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, {
               acceptNode: function(node) {
-                const parentName = node.parentNode.nodeName;
-                // Skip nodes we've already processed or structural tags
-                if (parentName === 'RT' || parentName === 'RUBY' || parentName === 'SCRIPT' || parentName === 'STYLE') {
-                  return NodeFilter.FILTER_REJECT;
-                }
+                const p = node.parentNode.nodeName;
+                if (p === 'RT' || p === 'RUBY' || p === 'SCRIPT' || p === 'STYLE') return NodeFilter.FILTER_REJECT;
                 return NodeFilter.FILTER_ACCEPT;
               }
             });
 
             const nodesToReplace = [];
             let node;
-            while ((node = walker.nextNode())) {
-              if (pattern.test(node.nodeValue)) {
-                nodesToReplace.push(node);
-              }
-            }
+            while ((node = walker.nextNode())) { if (pattern.test(node.nodeValue)) nodesToReplace.push(node); }
 
-            // Process matching text nodes
             nodesToReplace.forEach(textNode => {
               const text = textNode.nodeValue;
               const fragment = doc.createDocumentFragment();
-              let lastIndex = 0;
-              pattern.lastIndex = 0;
-              let match;
+              let lastIndex = 0; pattern.lastIndex = 0; let match;
 
               while ((match = pattern.exec(text)) !== null) {
                 const matchedWord = match[0];
                 const definition = dictionary[matchedWord.toLowerCase()];
-                
                 if (definition) {
-                  if (match.index > lastIndex) {
-                    fragment.appendChild(doc.createTextNode(text.substring(lastIndex, match.index)));
-                  }
-
+                  if (match.index > lastIndex) fragment.appendChild(doc.createTextNode(text.substring(lastIndex, match.index)));
                   const ruby = doc.createElement('ruby');
                   ruby.className = 'word-wise';
                   ruby.appendChild(doc.createTextNode(matchedWord));
-                  
                   const rt = doc.createElement('rt');
                   rt.className = 'word-wise-def';
                   rt.textContent = definition;
                   ruby.appendChild(rt);
-                  
                   fragment.appendChild(ruby);
                   lastIndex = pattern.lastIndex;
                 }
               }
-
-              if (lastIndex < text.length) {
-                fragment.appendChild(doc.createTextNode(text.substring(lastIndex)));
-              }
+              if (lastIndex < text.length) fragment.appendChild(doc.createTextNode(text.substring(lastIndex)));
               textNode.parentNode.replaceChild(fragment, textNode);
             });
           };
@@ -403,35 +392,23 @@
           const autoFetchWordWise = async (contents, bookId) => {
             const doc = contents.document;
             if (!doc) return;
-
             const text = doc.body.textContent || "";
-            // Find alphabetic words 6+ characters long
             const matches = text.match(/\b[a-zA-Z]{6,}\b/g) || [];
             const uniqueWords = [...new Set(matches.map(w => w.toLowerCase()))];
 
-            if (!attemptedWordsRef.current[bookId]) {
-              attemptedWordsRef.current[bookId] = new Set();
-            }
+            if (!attemptedWordsRef.current[bookId]) attemptedWordsRef.current[bookId] = new Set();
             const attempted = attemptedWordsRef.current[bookId];
             const currentDict = wordWiseRef.current.data[bookId] || {};
 
-            // Filter out words using our new clever heuristic algorithm
-            const wordsToFetch = uniqueWords.filter(w => 
-              !attempted.has(w) && 
-              !currentDict[w] && 
-              isDifficultWord(w)
-            );
-
+            const wordsToFetch = uniqueWords.filter(w => !attempted.has(w) && !currentDict[w] && isDifficultWord(w));
             if (wordsToFetch.length === 0) return;
 
-            // Fetch up to 6 intelligently filtered words per page/chapter load
-            const slice = wordsToFetch.slice(0, 6);
+            const slice = wordsToFetch.slice(0, 5);
             slice.forEach(w => attempted.add(w));
 
             let newDefs = {};
             let fetchedAny = false;
 
-            // Fetch definitions from free dictionary API
             await Promise.all(slice.map(async (word) => {
               try {
                 const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
@@ -439,40 +416,31 @@
                   const json = await res.json();
                   const def = json[0]?.meanings[0]?.definitions[0]?.definition;
                   if (def) {
-                    // Shorten the definition to fit above the text gracefully
-                    let shortDef = def.split(' ').slice(0, 4).join(' ');
-                    if (def.split(' ').length > 4) shortDef += '...';
-                    newDefs[word] = shortDef;
+                    newDefs[word] = def; // Store full definition for hover state
                     fetchedAny = true;
                   }
                 }
-              } catch (e) {
-                console.error("Auto WW fetch failed for", word);
-              }
+              } catch (e) { console.error("Auto WW fetch failed", word); }
             }));
 
             if (fetchedAny) {
-              setWordWiseData(prev => ({
-                ...prev,
-                [bookId]: { ...(prev[bookId] || {}), ...newDefs }
-              }));
-              
-              // Apply inline immediately to avoid a full page reload flash
-              if (wordWiseRef.current.enabled) {
-                applyWordWiseToContents(contents, newDefs);
-              }
+              setWordWiseData(prev => {
+                  const updated = { ...prev, [bookId]: { ...(prev[bookId] || {}), ...newDefs } };
+                  // Apply inline dynamically after state update
+                  if (wordWiseRef.current.enabled) {
+                      setTimeout(() => applyWordWiseToContents(contents, updated[bookId]), 50);
+                  }
+                  return updated;
+              });
             }
           };
 
-          // EPUB Rendering logic
           useEffect(() => {
             if (view === 'reader' && currentBook && currentBook.format === 'epub' && epubLoaded && viewerRef.current) {
-              // Don't try to render mock books without a real file
               if (!currentBook.fileData) return;
 
               const renderBook = async () => {
                 try {
-                  // Save current location before rebuilding rendition on layout change
                   let initialLocation = savedLocationRef.current;
                   if (renditionRef.current) {
                       if (renditionRef.current.location && renditionRef.current.location.start) {
@@ -482,215 +450,149 @@
                       renditionRef.current = null;
                   }
 
-                  // Load ArrayBuffer only once per book opening
                   if (!bookRef.current) {
                       const arrayBuffer = dataURItoArrayBuffer(currentBook.fileData);
                       bookRef.current = window.ePub(arrayBuffer); 
+                      // Generate locations for Bookmarks in background
+                      bookRef.current.ready.then(() => bookRef.current.locations.generate(1600)).catch(()=>{});
                   }
 
-                  // Dynamically resolve spreading
                   const spreadMode = (isLandscape && twoPageView) ? 'auto' : 'none';
-
                   const rendition = bookRef.current.renderTo(viewerRef.current, {
-                    width: '100%',
-                    height: '100%',
-                    spread: spreadMode,
-                    manager: 'continuous',
-                    flow: 'paginated',
-                    minSpreadWidth: (isLandscape && twoPageView) ? 1 : 800 // Force spread layout if enabled
+                    width: '100%', height: '100%', spread: spreadMode, manager: 'continuous', flow: 'paginated', minSpreadWidth: (isLandscape && twoPageView) ? 1 : 800
                   });
 
-                  // Restore location if changing orientation/settings
-                  if (initialLocation) {
-                      rendition.display(initialLocation);
-                  } else {
-                      rendition.display();
-                  }
+                  rendition.display(initialLocation || undefined);
                   
-                  // Register Themes
                   rendition.themes.register("light", { "body": { "background": "#f4f4f4", "color": "#111111" }});
                   rendition.themes.register("dark", { "body": { "background": "#111111", "color": "#f4f4f4" }});
-                  
+                  rendition.themes.register("sepia", { "body": { "background": "#f4ecd8", "color": "#5b4636" }});
                   renditionRef.current = rendition;
 
-                  // Apply initial settings
                   rendition.themes.fontSize(`${readerSettings.fontSize}%`);
                   rendition.themes.font(readerSettings.fontFamily);
-                  rendition.themes.select(isDarkMode ? 'dark' : 'light');
+                  rendition.themes.select(theme);
 
-                  // Hook to apply Word Wise on every new chapter/page load
                   rendition.hooks.content.register((contents) => {
                      const { data, enabled, autoEnabled } = wordWiseRef.current;
                      const bookId = currentBookRef.current?.id;
                      if (!bookId) return;
 
-                     if (enabled && data[bookId]) {
-                        applyWordWiseToContents(contents, data[bookId]);
-                     }
-                     if (autoEnabled) {
-                        autoFetchWordWise(contents, bookId);
-                     }
+                     // Context Menu Injection
+                     contents.document.addEventListener('contextmenu', (e) => {
+                         e.preventDefault();
+                         let selection = contents.window.getSelection();
+                         let text = selection.toString().trim();
+                         let range;
+
+                         // Clever fallback: if no selection, try to auto-select word at right-click coordinates
+                         if (!text && contents.document.caretRangeFromPoint) {
+                             range = contents.document.caretRangeFromPoint(e.clientX, e.clientY);
+                             if (range) {
+                                 selection.removeAllRanges();
+                                 selection.addRange(range);
+                                 selection.modify("move", "backward", "word");
+                                 selection.modify("extend", "forward", "word");
+                                 text = selection.toString().trim();
+                                 range = selection.getRangeAt(0);
+                             }
+                         } else if (text) {
+                             range = selection.getRangeAt(0);
+                         }
+
+                         if (text && range) {
+                             const cfiRange = new window.ePub.CFI(range, contents.cfiBase).toString();
+                             const rect = viewerRef.current.getBoundingClientRect();
+                             setContextMenu({ visible: true, x: e.clientX + rect.left, y: e.clientY + rect.top, text, cfiRange });
+                         }
+                     });
+                     
+                     // Close menu on click
+                     contents.document.addEventListener('click', () => setContextMenu(null));
+
+                     if (enabled && data[bookId]) applyWordWiseToContents(contents, data[bookId]);
+                     if (autoEnabled) autoFetchWordWise(contents, bookId);
                   });
 
-                  rendition.on('relocated', (location) => {
-                      savedLocationRef.current = location.start.cfi;
-                  });
+                  rendition.on('relocated', (location) => { savedLocationRef.current = location.start.cfi; });
 
-                  // Kindle tap zones implementation (Menu ONLY, no flip on click)
                   rendition.on('click', (e) => {
                     const height = window.innerHeight;
                     const y = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
-
-                    if (y < height * 0.15) {
-                      // Top 15% taps open menu
-                      setMenuOpen(prev => !prev);
-                      setAaMenuOpen(false);
-                    }
+                    if (y < height * 0.15) { setMenuOpen(prev => !prev); setAaMenuOpen(false); }
                   });
 
-                  // Setup touch events for iframe (Swipe)
-                  rendition.on('touchstart', (e) => {
-                     rendition.touchStartX = e.changedTouches[0].screenX;
-                  });
+                  rendition.on('touchstart', (e) => { rendition.touchStartX = e.changedTouches[0].screenX; });
                   rendition.on('touchend', (e) => {
                      const touchEndX = e.changedTouches[0].screenX;
-                     if (rendition.touchStartX - touchEndX > 50) rendition.next(); // swipe left
-                     if (rendition.touchStartX - touchEndX < -50) rendition.prev(); // swipe right
+                     if (rendition.touchStartX - touchEndX > 50) rendition.next();
+                     if (rendition.touchStartX - touchEndX < -50) rendition.prev();
                   });
                   
-                  // Setup Keyboard inside iframe
                   rendition.on('keyup', (e) => {
                       if (e.key === 'ArrowLeft') rendition.prev();
                       if (e.key === 'ArrowRight') rendition.next();
                   });
 
-                  // Long press / Tap and Hold for Word Wise (Native text selection triggers this)
-                  rendition.on('selected', async (cfiRange, contents) => {
+                  // Context Menu Selection Saver (for long press)
+                  rendition.on('selected', (cfiRange, contents) => {
                       const text = rendition.getRange(cfiRange).toString().trim();
-                      // Clear selection immediately to mimic app behavior
-                      contents.window.getSelection().removeAllRanges();
-
-                      if (!text || text.includes(' ') || text.length < 2) return;
-                      
-                      const cleanWord = text.replace(/[^a-zA-Z]/g, '').toLowerCase();
-                      const bookId = currentBookRef.current?.id;
-                      
-                      if (cleanWord.length < 2 || !bookId) return;
-
-                      try {
-                          const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord}`);
-                          if (res.ok) {
-                              const json = await res.json();
-                              const def = json[0]?.meanings[0]?.definitions[0]?.definition;
-                              if (def) {
-                                  let shortDef = def.split(' ').slice(0, 4).join(' ');
-                                  if (def.split(' ').length > 4) shortDef += '...';
-                                  
-                                  const newDefs = { [cleanWord]: shortDef };
-                                  
-                                  setWordWiseData(prev => ({
-                                      ...prev,
-                                      [bookId]: { ...(prev[bookId] || {}), ...newDefs }
-                                  }));
-                                  
-                                  setWordWiseEnabled(true);
-                                  applyWordWiseToContents(contents, newDefs);
-                              }
-                          }
-                      } catch (e) {
-                          console.error("Tap & Hold WW fetch failed", e);
+                      if (text) {
+                         lastSelectionRef.current = { cfiRange, text };
+                         // We don't automatically clear selection here anymore to allow Context Menu interactions natively
                       }
                   });
 
-                } catch (err) {
-                  console.error("EPUB render error:", err);
-                }
+                } catch (err) { console.error("EPUB render error:", err); }
               };
-
               renderBook();
             }
           }, [view, currentBook, epubLoaded, isLandscape, twoPageView]);
 
-          // Apply Reader Settings Dynamically
+          // Dynamic Theme & Settings Apply
           useEffect(() => {
             if (renditionRef.current && currentBook?.format === 'epub' && currentBook?.fileData) {
               const { themes } = renditionRef.current;
               themes.fontSize(`${readerSettings.fontSize}%`);
               themes.font(readerSettings.fontFamily);
-              themes.select(isDarkMode ? 'dark' : 'light');
+              themes.select(theme);
+              
+              // Force wordwise styling update
+              const bg = theme === 'dark' ? '#1a1a1a' : theme === 'sepia' ? '#e4d8c8' : '#ffffff';
+              const color = theme === 'dark' ? '#f4f4f4' : theme === 'sepia' ? '#5b4636' : '#111111';
+              try {
+                  renditionRef.current.getContents().forEach(c => {
+                      c.document.documentElement.style.setProperty('--ww-bg', bg);
+                      c.document.documentElement.style.setProperty('--ww-color', color);
+                  });
+              } catch(e){}
             }
-          }, [readerSettings, isDarkMode, currentBook]);
+          }, [readerSettings, theme, currentBook]);
 
-          // Force re-render of the current page ONLY when Word Wise toggle changes
           useEffect(() => {
             if (renditionRef.current && epubLoaded && currentBook?.fileData && renditionRef.current.location) {
-               try {
-                 const currentLocation = renditionRef.current.location.start.cfi;
-                 if (currentLocation) renditionRef.current.display(currentLocation);
-               } catch (err) {
-                 console.error("Failed to refresh location for Word Wise toggle", err);
-               }
+               try { renditionRef.current.display(renditionRef.current.location.start.cfi); } catch (err) {}
             }
-          }, [wordWiseEnabled]); // Removed wordWiseData dependency to prevent infinite loops during auto-fetch
-
-          // Handle Auto Word Wise Toggle activation
-          useEffect(() => {
-            if (autoWordWiseEnabled && currentBook?.fileData && renditionRef.current?.location) {
-               setWordWiseEnabled(true); // Ensure main word wise is on
-               
-               // Trigger fetch on currently active contents immediately
-               const contents = renditionRef.current.getContents()[0];
-               if (contents && currentBook.id) {
-                   autoFetchWordWise(contents, currentBook.id);
-               }
-            }
-          }, [autoWordWiseEnabled]);
-
-          // Handle generic tap for non-epub views
-          const handleGenericReaderTap = (e) => {
-            if (currentBook?.format === 'epub' && currentBook?.fileData) return; // Handled by epub.js iframe
-            const height = window.innerHeight;
-            const y = e.clientY;
-            if (y < height * 0.2) {
-              setMenuOpen(!menuOpen);
-              setAaMenuOpen(false);
-            }
-          };
-
-          const getFormatDisplay = (book) => {
-            if (book.format === 'epub') return 'EPUB';
-            if (book.format === 'pdf') return 'PDF';
-            if (book.format === 'mobi') return 'MOBI';
-            if (book.format === 'azw3') return 'AZW3';
-            return book.format.toUpperCase();
-          };
-
-          // --- UI COMPONENTS ---
+          }, [wordWiseEnabled]);
 
           const TopSystemBar = () => (
-            <div className={`flex justify-between items-center px-4 py-1 text-xs font-semibold select-none z-50
-              ${isDarkMode ? 'bg-black text-gray-300 border-gray-800' : 'bg-white text-gray-800 border-gray-200'}
-              ${view === 'reader' && !menuOpen ? 'hidden' : 'border-b relative'}
-            `}>
+            <div className={`flex justify-between items-center px-4 py-1 text-xs font-semibold select-none z-50 ${currentTheme.bg} ${currentTheme.text} ${currentTheme.border} ${view === 'reader' && !menuOpen ? 'hidden' : 'border-b relative'}`}>
               <div className="flex space-x-2 items-center">
                 <span>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
               <div className="flex space-x-3 items-center">
                 <Wifi size={14} />
-                <div className="flex items-center space-x-1">
-                  <span>87%</span>
-                  <Battery size={16} className="rotate-90" />
-                </div>
+                <div className="flex items-center space-x-1"><span>87%</span><Battery size={16} className="rotate-90" /></div>
               </div>
             </div>
           );
 
           const LibraryHeader = () => (
-            <div className={`px-4 py-3 flex flex-col space-y-4 border-b ${isDarkMode ? 'border-gray-800 bg-black text-white' : 'border-gray-300 bg-white text-black'}`}>
+            <div className={`px-4 py-3 flex flex-col space-y-4 border-b ${currentTheme.bg} ${currentTheme.text} ${currentTheme.border}`}>
               <div className="flex justify-between items-center">
                 <div className="flex space-x-6 text-xl font-bold font-serif tracking-wide">
-                  <button onClick={() => setView('home')} className={view === 'home' ? 'border-b-2 border-current' : 'text-gray-500'}>Home</button>
-                  <button onClick={() => setView('library')} className={view === 'library' ? 'border-b-2 border-current' : 'text-gray-500'}>Library</button>
+                  <button onClick={() => setView('home')} className={view === 'home' ? 'border-b-2 border-current' : 'opacity-50'}>Home</button>
+                  <button onClick={() => setView('library')} className={view === 'library' ? 'border-b-2 border-current' : 'opacity-50'}>Library</button>
                 </div>
                 <div className="flex space-x-4">
                   <button><Search size={22} /></button>
@@ -698,290 +600,181 @@
                   <button><MoreVertical size={22} /></button>
                 </div>
               </div>
-
               {view === 'library' && (
                 <div className="flex justify-between items-center text-sm font-semibold">
                   <div className="flex space-x-4">
-                    <button className="flex items-center space-x-1 bg-gray-200 dark:bg-gray-800 px-3 py-1 rounded-full">
-                      <span>All</span>
-                    </button>
-                    <button className="flex items-center space-x-1 px-3 py-1">
-                      <span>Downloaded</span>
-                    </button>
+                    <button className={`flex items-center space-x-1 px-3 py-1 rounded-full ${theme === 'dark' ? 'bg-gray-800' : theme === 'sepia' ? 'bg-[#e4d8c8]' : 'bg-gray-200'}`}>All</button>
+                    <button className="flex items-center space-x-1 px-3 py-1">Downloaded</button>
                   </div>
-                  <div className="flex space-x-3 text-gray-500">
-                    <button onClick={() => setLibraryViewType('grid')} className={libraryViewType === 'grid' ? 'text-current' : ''}><Grid size={20} /></button>
-                    <button onClick={() => setLibraryViewType('list')} className={libraryViewType === 'list' ? 'text-current' : ''}><List size={20} /></button>
+                  <div className="flex space-x-3 opacity-60">
+                    <button onClick={() => setLibraryViewType('grid')} className={libraryViewType === 'grid' ? 'text-current opacity-100' : ''}><Grid size={20} /></button>
+                    <button onClick={() => setLibraryViewType('list')} className={libraryViewType === 'list' ? 'text-current opacity-100' : ''}><ListIcon size={20} /></button>
                   </div>
                 </div>
               )}
             </div>
           );
 
-          const LibraryView = () => (
-            <div className={`flex-1 overflow-y-auto p-4 ${isDarkMode ? 'bg-[#111111]' : 'bg-[#f4f4f4]'}`}>
-              <div className={libraryViewType === 'grid' 
-                ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6" 
-                : "flex flex-col space-y-4"}>
-                
-                {books.map((book) => (
-                  <div 
-                    key={book.id} 
-                    onClick={() => openBook(book)}
-                    className={`cursor-pointer group flex ${libraryViewType === 'list' ? 'flex-row space-x-4 items-center' : 'flex-col space-y-2'}`}
-                  >
-                    <div className={`relative ${libraryViewType === 'grid' ? 'w-full aspect-[2/3]' : 'w-20 h-30 flex-shrink-0'}`}>
-                      {book.cover ? (
-                        <img src={book.cover} alt={book.title} className="w-full h-full object-cover rounded shadow-sm border border-gray-300 dark:border-gray-700 grayscale contrast-125" />
-                      ) : (
-                        <div className="w-full h-full bg-gray-200 dark:bg-gray-800 rounded shadow-sm flex items-center justify-center p-2 text-center border border-gray-300 dark:border-gray-700">
-                          <span className="font-serif text-sm font-bold truncate whitespace-normal">{book.title}</span>
-                        </div>
-                      )}
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] px-2 py-1 flex justify-between">
-                        <span>{book.progress}%</span>
-                        <span className="uppercase font-bold">{getFormatDisplay(book)}</span>
-                      </div>
-                    </div>
-                    <div className={`flex flex-col ${libraryViewType === 'grid' ? 'text-center' : 'flex-1'}`}>
-                      <span className={`font-bold font-serif leading-tight ${isDarkMode ? 'text-white' : 'text-black'} ${libraryViewType === 'grid' ? 'text-sm mt-1 truncate' : 'text-lg'}`}>
-                        {book.title}
-                      </span>
-                      <span className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {book.author}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Upload FAB */}
-              <button 
-                onClick={() => fileInputRef.current?.click()}
-                className={`fixed bottom-6 right-6 p-4 rounded-full shadow-lg flex items-center justify-center
-                  ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}
-              >
-                <Upload size={24} />
-              </button>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileUpload} 
-                accept=".epub,.pdf,.mobi,.azw3" 
-                className="hidden" 
-              />
-            </div>
-          );
-
-          const ReaderOverlayMenu = () => (
-            <div className={`absolute top-0 left-0 right-0 z-40 transition-transform duration-300 ${menuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-              <div className={`${isDarkMode ? 'bg-[#1a1a1a] text-white border-gray-800' : 'bg-white text-black border-gray-200'} border-b shadow-md`}>
-                <div className="flex justify-between items-center px-4 py-3">
-                  <button onClick={closeReader} className="flex items-center space-x-2 text-xl font-serif">
-                    <ChevronLeft size={28} />
-                    <span>Library</span>
-                  </button>
-                  
-                  <div className="flex space-x-6 items-center">
-                    <button onClick={() => setIsDarkMode(!isDarkMode)}>
-                      {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-                    </button>
-                    <button onClick={() => setAaMenuOpen(!aaMenuOpen)} className="font-serif font-bold text-xl px-2 border border-current rounded">
-                      Aa
-                    </button>
-                    <button><Search size={24} /></button>
-                    <button><MoreVertical size={24} /></button>
-                  </div>
-                </div>
-
-                {/* Aa Menu */}
-                {aaMenuOpen && (
-                  <div className={`p-4 border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
-                    <div className="flex flex-col space-y-6 max-w-md mx-auto">
-                      
-                      {/* Font Size */}
-                      <div className="flex items-center justify-between space-x-4">
-                        <Type size={16} />
-                        <input 
-                          type="range" 
-                          min="50" max="200" step="10"
-                          value={readerSettings.fontSize}
-                          onChange={(e) => setReaderSettings({...readerSettings, fontSize: e.target.value})}
-                          className="w-full h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer"
-                        />
-                        <Type size={24} />
-                      </div>
-
-                      {/* Font Family */}
-                      <div className="grid grid-cols-2 gap-3">
-                        <button 
-                          onClick={() => setReaderSettings({...readerSettings, fontFamily: 'ui-serif, Georgia, serif'})}
-                          className={`p-2 border rounded font-serif ${readerSettings.fontFamily.includes('serif') ? (isDarkMode ? 'bg-white text-black' : 'bg-black text-white') : (isDarkMode ? 'border-gray-600' : 'border-gray-300')}`}
-                        >
-                          Bookerly
-                        </button>
-                        <button 
-                          onClick={() => setReaderSettings({...readerSettings, fontFamily: 'ui-sans-serif, system-ui, sans-serif'})}
-                          className={`p-2 border rounded font-sans ${readerSettings.fontFamily.includes('sans') ? (isDarkMode ? 'bg-white text-black' : 'bg-black text-white') : (isDarkMode ? 'border-gray-600' : 'border-gray-300')}`}
-                        >
-                          Amazon Ember
-                        </button>
-                      </div>
-
-                      {/* Display Layout Section */}
-                      {isLandscape && (
-                        <div className={`mt-4 pt-4 border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <Columns size={16} />
-                              <span className="font-bold text-sm">Two-Page View</span>
-                            </div>
-                            <button 
-                              onClick={() => setTwoPageView(!twoPageView)}
-                              className={`w-11 h-6 rounded-full relative transition-colors ${twoPageView ? 'bg-black dark:bg-white' : 'bg-gray-300 dark:bg-gray-700'}`}
-                            >
-                              <div className={`w-4 h-4 rounded-full bg-white dark:bg-black absolute top-1 transition-transform ${twoPageView ? 'translate-x-6' : 'translate-x-1'}`} />
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Word Wise Section */}
-                      <div className={`mt-4 pt-4 border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-2">
-                            <BookOpen size={16} />
-                            <span className="font-bold text-sm">Show Word Wise</span>
-                          </div>
-                          <button 
-                            onClick={() => setWordWiseEnabled(!wordWiseEnabled)}
-                            className={`w-11 h-6 rounded-full relative transition-colors ${wordWiseEnabled ? 'bg-black dark:bg-white' : 'bg-gray-300 dark:bg-gray-700'}`}
-                          >
-                            <div className={`w-4 h-4 rounded-full bg-white dark:bg-black absolute top-1 transition-transform ${wordWiseEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-                          </button>
-                        </div>
-
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center space-x-2">
-                            <DownloadCloud size={16} />
-                            <span className="font-bold text-sm">Auto-Download Meanings</span>
-                          </div>
-                          <button 
-                            onClick={() => setAutoWordWiseEnabled(!autoWordWiseEnabled)}
-                            className={`w-11 h-6 rounded-full relative transition-colors ${autoWordWiseEnabled ? 'bg-black dark:bg-white' : 'bg-gray-300 dark:bg-gray-700'}`}
-                          >
-                            <div className={`w-4 h-4 rounded-full bg-white dark:bg-black absolute top-1 transition-transform ${autoWordWiseEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-                          </button>
-                        </div>
-                        
-                        <button 
-                          onClick={() => wordWiseFileInputRef.current?.click()} 
-                          className={`w-full text-xs p-2 border border-dashed rounded text-center cursor-pointer transition-colors ${isDarkMode ? 'border-gray-600 hover:bg-gray-800' : 'border-gray-400 hover:bg-gray-100'}`}
-                        >
-                          {wordWiseData[currentBook?.id] ? 'Dictionary Loaded (Upload to Replace)' : '+ Upload Dictionary (.json)'}
-                        </button>
-                        <input 
-                          type="file" 
-                          ref={wordWiseFileInputRef} 
-                          accept=".json" 
-                          className="hidden" 
-                          onChange={handleWordWiseUpload} 
-                        />
-                      </div>
-
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-
-          const NonEpubFallback = () => {
-            if (!currentBook) return null;
-
-            if (currentBook.format === 'epub' && !currentBook.fileData) {
-              return (
-                 <div className={`flex flex-col items-center justify-center h-full space-y-4 text-center p-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                   <BookOpen size={48} className="text-gray-400 opacity-50 mb-4" />
-                   <h2 className="text-2xl font-serif font-bold">Demo Book Placeholder</h2>
-                   <p className="max-w-md text-lg">
-                     This is a mock library item, or its file data could not be saved to local storage. To see the reading experience, please tap the <strong>+ Upload</strong> button on the Library screen to select an actual `.epub` file from your device.
-                   </p>
-                 </div>
-              );
-            }
-
-            if (currentBook.format === 'pdf') {
-              return (
-                <div className="w-full h-full bg-white relative">
-                  {currentBook.fileData ? (
-                    <iframe src={`${currentBook.fileData}#toolbar=0&navpanes=0`} className="w-full h-full border-none" title="PDF Viewer" />
-                  ) : (
-                    <div className={`flex flex-col items-center justify-center h-full space-y-4 text-center p-8 ${isDarkMode ? 'text-gray-300 bg-[#111111]' : 'text-gray-600 bg-white'}`}>
-                       <BookOpen size={48} className="text-gray-400" />
-                       <h2 className="text-2xl font-serif">PDF Viewer</h2>
-                       <p>Please upload a local PDF file to view it natively.</p>
-                    </div>
-                  )}
-                </div>
-              );
-            }
-
-            if (currentBook.format === 'mobi' || currentBook.format === 'azw3') {
-              return (
-                <div className={`flex flex-col items-center justify-center h-full space-y-6 text-center p-8
-                  ${isDarkMode ? 'bg-[#111111] text-gray-300' : 'bg-[#f4f4f4] text-gray-800'}`}
-                >
-                  <div className="animate-pulse">
-                    <Settings size={48} className="text-gray-400 animate-spin-slow" />
-                  </div>
-                  <h2 className="text-2xl font-serif font-bold">Whispersync Conversion Required</h2>
-                  <p className="max-w-md text-lg">
-                    Format <strong>.{currentBook.format.toUpperCase()}</strong> detected. <br/><br/>
-                    On a physical Kindle, these proprietary formats are processed by Amazon's internal software. 
-                    In this web simulation, robust client-side parsing for DRM/Amazon formats is unavailable.
-                  </p>
-                  <div className="p-4 border border-dashed border-gray-400 rounded-lg">
-                    <p className="font-bold">Tip for this demo:</p>
-                    <p>Convert your {currentBook.format.toUpperCase()} to <strong>EPUB</strong> using Calibre and upload the EPUB file for a flawless reading experience.</p>
-                  </div>
-                  <button onClick={closeReader} className="mt-8 px-6 py-2 border-2 border-current rounded-full font-bold hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
-                    Return to Library
-                  </button>
-                </div>
-              );
-            }
-
-            return null;
-          };
-
           return (
-            <div className={`flex flex-col w-full h-screen overflow-hidden selection:bg-gray-300 ${isDarkMode ? 'bg-[#111111] text-[#f4f4f4]' : 'bg-[#f4f4f4] text-[#111111]'}`}>
+            <div className={`flex flex-col w-full h-screen overflow-hidden selection:bg-gray-400/30 ${currentTheme.bg} ${currentTheme.text}`} onClick={() => { if(contextMenu) setContextMenu(null) }}>
               <TopSystemBar />
 
               {view !== 'reader' ? (
-                <React.Fragment>
+                <>
                   <LibraryHeader />
-                  <LibraryView />
-                </React.Fragment>
-              ) : (
-                <div className="relative flex-1 flex flex-col w-full h-full overflow-hidden" onClick={handleGenericReaderTap}>
-                  <ReaderOverlayMenu />
-                  
-                  <div className="flex-1 w-full h-full relative z-10">
-                    {currentBook?.format === 'epub' && currentBook?.fileData ? (
-                      <div ref={viewerRef} className="w-full h-full absolute inset-0" />
-                    ) : (
-                      <NonEpubFallback />
-                    )}
+                  <div className="flex-1 overflow-y-auto p-4">
+                    <div className={libraryViewType === 'grid' ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6" : "flex flex-col space-y-4"}>
+                      {books.map((book) => (
+                        <div key={book.id} onClick={() => openBook(book)} className={`cursor-pointer group flex ${libraryViewType === 'list' ? 'flex-row space-x-4 items-center' : 'flex-col space-y-2'}`}>
+                          <div className={`relative ${libraryViewType === 'grid' ? 'w-full aspect-[2/3]' : 'w-20 h-30 flex-shrink-0'}`}>
+                            {book.cover ? (
+                              <img src={book.cover} alt={book.title} className={`w-full h-full object-cover rounded shadow-sm border ${currentTheme.border} grayscale contrast-125`} />
+                            ) : (
+                              <div className={`w-full h-full rounded shadow-sm flex items-center justify-center p-2 text-center border ${currentTheme.border} ${theme==='dark'?'bg-gray-800':theme==='sepia'?'bg-[#e4d8c8]':'bg-gray-200'}`}>
+                                <span className="font-serif text-sm font-bold truncate whitespace-normal">{book.title}</span>
+                              </div>
+                            )}
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] px-2 py-1 flex justify-between">
+                              <span>{book.progress}%</span>
+                              <span className="uppercase font-bold">{book.format}</span>
+                            </div>
+                          </div>
+                          <div className={`flex flex-col ${libraryViewType === 'grid' ? 'text-center' : 'flex-1'}`}>
+                            <span className={`font-bold font-serif leading-tight ${libraryViewType === 'grid' ? 'text-sm mt-1 truncate' : 'text-lg'}`}>{book.title}</span>
+                            <span className="text-xs mt-1 opacity-70">{book.author}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <button onClick={() => fileInputRef.current?.click()} className={`fixed bottom-6 right-6 p-4 rounded-full shadow-lg flex items-center justify-center ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
+                      <Upload size={24} />
+                    </button>
+                    <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept=".epub,.pdf,.mobi,.azw3" className="hidden" />
                   </div>
+                </>
+              ) : (
+                <div className="relative flex-1 flex flex-col w-full h-full overflow-hidden" onClick={(e) => { if (e.clientY < window.innerHeight * 0.2 && !notebookOpen) setMenuOpen(!menuOpen); }}>
+                  
+                  {/* Context Menu */}
+                  {contextMenu && (
+                    <div 
+                        className={`fixed border shadow-xl rounded py-1 z-50 flex flex-col min-w-[150px] ${currentTheme.menu} ${currentTheme.border}`}
+                        style={{ top: Math.min(contextMenu.y, window.innerHeight - 150), left: Math.min(contextMenu.x, window.innerWidth - 150) }}
+                    >
+                        <button className={`px-4 py-2 text-left text-sm ${currentTheme.hover}`} onClick={() => handleContextMenuAction('copy')}>Copy "{contextMenu.text.substring(0, 15)}..."</button>
+                        <button className={`px-4 py-2 text-left text-sm ${currentTheme.hover}`} onClick={() => handleContextMenuAction('bookmark')}>Bookmark Location</button>
+                        <button className={`px-4 py-2 text-left text-sm ${currentTheme.hover}`} onClick={() => handleContextMenuAction('character')}>Add to Characters</button>
+                    </div>
+                  )}
 
-                  {/* Bottom Reader Status */}
-                  <div className={`absolute bottom-0 left-0 right-0 p-2 text-center text-xs font-serif font-semibold z-30 transition-opacity duration-300
-                    ${menuOpen ? 'opacity-0' : 'opacity-100'}
-                    ${isDarkMode ? 'text-gray-500 bg-gradient-to-t from-black to-transparent' : 'text-gray-500 bg-gradient-to-t from-[#f4f4f4] to-transparent'}
-                  `}>
-                    Page 1 • 2 mins left in chapter • {currentBook?.progress || 0}%
+                  {/* Notebook Overlay */}
+                  {notebookOpen && (
+                    <div className={`absolute inset-0 z-40 flex flex-col ${currentTheme.bg} overflow-hidden`}>
+                        <div className={`flex items-center px-4 py-3 border-b ${currentTheme.border}`}>
+                            <button onClick={() => setNotebookOpen(false)} className="mr-4"><ChevronLeft size={28} /></button>
+                            <h2 className="text-xl font-serif font-bold flex-1">Notebook</h2>
+                            <div className="flex space-x-2 border rounded p-1">
+                                <button onClick={()=>setNotebookTab('bookmarks')} className={`px-3 py-1 rounded text-sm ${notebookTab === 'bookmarks' ? (theme==='dark'?'bg-gray-800':'bg-gray-200') : ''}`}>Bookmarks</button>
+                                <button onClick={()=>setNotebookTab('characters')} className={`px-3 py-1 rounded text-sm ${notebookTab === 'characters' ? (theme==='dark'?'bg-gray-800':'bg-gray-200') : ''}`}>Characters</button>
+                            </div>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4">
+                            {notebookTab === 'bookmarks' && (
+                                <div className="flex flex-col space-y-4">
+                                    {(bookmarks[currentBook.id] || []).map((bm) => (
+                                        <div key={bm.id} onClick={() => { renditionRef.current.display(bm.cfi); setNotebookOpen(false); }} className={`p-3 border rounded cursor-pointer ${currentTheme.border} ${currentTheme.hover}`}>
+                                            <p className="font-serif italic opacity-90 mb-2">"{bm.text}"</p>
+                                            <p className="text-xs opacity-50 font-bold uppercase">Location {bm.percentage}%</p>
+                                        </div>
+                                    ))}
+                                    {!(bookmarks[currentBook.id] || []).length && <p className="opacity-50 text-center mt-10">No bookmarks saved yet.</p>}
+                                </div>
+                            )}
+                            {notebookTab === 'characters' && (
+                                <div className="flex flex-col md:flex-row h-full">
+                                    <div className={`w-full md:w-1/3 flex flex-col space-y-2 border-b md:border-b-0 md:border-r ${currentTheme.border} pb-4 md:pb-0 md:pr-4`}>
+                                        {(characters[currentBook.id] || []).map((char, idx) => (
+                                            <button key={idx} onClick={() => searchCharacter(char)} className={`p-3 border rounded text-left font-serif font-bold ${currentTheme.border} ${currentTheme.hover}`}>
+                                                {char}
+                                            </button>
+                                        ))}
+                                        {!(characters[currentBook.id] || []).length && <p className="opacity-50">Right click a name to add characters.</p>}
+                                    </div>
+                                    <div className="w-full md:w-2/3 flex-1 overflow-y-auto md:pl-4 pt-4 md:pt-0">
+                                        {isSearching && <p className="animate-pulse">Searching book...</p>}
+                                        {searchResults && searchResults.map((res, i) => (
+                                            <div key={i} onClick={() => { renditionRef.current.display(res.cfi); setNotebookOpen(false); }} className={`p-3 mb-3 border rounded cursor-pointer ${currentTheme.border} ${currentTheme.hover}`}>
+                                                <p className="font-serif text-sm opacity-90" dangerouslySetInnerHTML={{__html: res.excerpt.replace(new RegExp(res.query, 'gi'), match => `<mark class="bg-yellow-200 text-black px-1">${match}</mark>`)}} />
+                                            </div>
+                                        ))}
+                                        {searchResults && searchResults.length === 0 && !isSearching && <p className="opacity-50">No mentions found.</p>}
+                                        {!searchResults && !isSearching && <p className="opacity-50 italic">Select a character to locate in text.</p>}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                  )}
+
+                  {/* Reader Overlay Menu */}
+                  <div className={`absolute top-0 left-0 right-0 z-30 transition-transform duration-300 ${menuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+                    <div className={`${currentTheme.menu} ${currentTheme.border} border-b shadow-md`}>
+                      <div className="flex justify-between items-center px-4 py-3">
+                        <button onClick={closeReader} className="flex items-center space-x-2 text-xl font-serif">
+                          <ChevronLeft size={28} /><span>Library</span>
+                        </button>
+                        <div className="flex space-x-5 items-center">
+                          <button onClick={() => setNotebookOpen(true)}><Notebook size={24} /></button>
+                          <button onClick={() => setAaMenuOpen(!aaMenuOpen)} className="font-serif font-bold text-xl px-2 border border-current rounded">Aa</button>
+                          <button><Search size={24} /></button>
+                          <button><MoreVertical size={24} /></button>
+                        </div>
+                      </div>
+
+                      {aaMenuOpen && (
+                        <div className={`p-4 border-t ${currentTheme.border}`}>
+                          <div className="flex flex-col space-y-6 max-w-md mx-auto">
+                            {/* Theme Engine */}
+                            <div className="flex justify-between items-center bg-black/5 dark:bg-white/5 p-1 rounded-lg">
+                                <button onClick={() => setTheme('light')} className={`flex-1 py-2 flex justify-center rounded-md ${theme === 'light' ? 'bg-white shadow text-black' : 'opacity-60'}`}><Sun size={20}/></button>
+                                <button onClick={() => setTheme('sepia')} className={`flex-1 py-2 flex justify-center rounded-md ${theme === 'sepia' ? 'bg-[#e4d8c8] shadow text-[#5b4636]' : 'opacity-60'}`}><Palette size={20}/></button>
+                                <button onClick={() => setTheme('dark')} className={`flex-1 py-2 flex justify-center rounded-md ${theme === 'dark' ? 'bg-black shadow text-white' : 'opacity-60'}`}><Moon size={20}/></button>
+                            </div>
+
+                            <div className="flex items-center justify-between space-x-4">
+                              <Type size={16} />
+                              <input type="range" min="50" max="200" step="10" value={readerSettings.fontSize} onChange={(e) => setReaderSettings({...readerSettings, fontSize: e.target.value})} className="w-full h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer" />
+                              <Type size={24} />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                              <button onClick={() => setReaderSettings({...readerSettings, fontFamily: 'ui-serif, Georgia, serif'})} className={`p-2 border rounded font-serif ${readerSettings.fontFamily.includes('serif') ? 'ring-2 ring-current' : 'opacity-70'} ${currentTheme.border}`}>Bookerly</button>
+                              <button onClick={() => setReaderSettings({...readerSettings, fontFamily: 'ui-sans-serif, system-ui, sans-serif'})} className={`p-2 border rounded font-sans ${readerSettings.fontFamily.includes('sans') ? 'ring-2 ring-current' : 'opacity-70'} ${currentTheme.border}`}>Amazon Ember</button>
+                            </div>
+
+                            {isLandscape && (
+                              <div className={`pt-4 border-t ${currentTheme.border} flex justify-between`}>
+                                <div className="flex items-center space-x-2"><Columns size={16} /><span className="font-bold text-sm">Two-Page View</span></div>
+                                <button onClick={() => setTwoPageView(!twoPageView)} className={`w-11 h-6 rounded-full relative transition-colors ${twoPageView ? 'bg-blue-500' : 'bg-gray-400'}`}><div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${twoPageView ? 'translate-x-6' : 'translate-x-1'}`} /></button>
+                              </div>
+                            )}
+
+                            <div className={`pt-4 border-t ${currentTheme.border}`}>
+                              <div className="flex justify-between mb-3"><div className="flex items-center space-x-2"><BookOpen size={16} /><span className="font-bold text-sm">Show Word Wise</span></div><button onClick={() => setWordWiseEnabled(!wordWiseEnabled)} className={`w-11 h-6 rounded-full relative ${wordWiseEnabled ? 'bg-blue-500' : 'bg-gray-400'}`}><div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${wordWiseEnabled ? 'translate-x-6' : 'translate-x-1'}`} /></button></div>
+                              <div className="flex justify-between mb-4"><div className="flex items-center space-x-2"><DownloadCloud size={16} /><span className="font-bold text-sm">Auto-Download Meanings</span></div><button onClick={() => setAutoWordWiseEnabled(!autoWordWiseEnabled)} className={`w-11 h-6 rounded-full relative ${autoWordWiseEnabled ? 'bg-blue-500' : 'bg-gray-400'}`}><div className={`w-4 h-4 rounded-full bg-white absolute top-1 transition-transform ${autoWordWiseEnabled ? 'translate-x-6' : 'translate-x-1'}`} /></button></div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 w-full h-full relative z-10 pointer-events-none">
+                    {currentBook?.format === 'epub' && currentBook?.fileData ? (
+                      <div ref={viewerRef} className="w-full h-full absolute inset-0 pointer-events-auto" />
+                    ) : (
+                      currentBook && <div className="flex flex-col items-center justify-center h-full text-center p-8 pointer-events-auto"><Settings size={48} className="animate-spin-slow mb-4 opacity-50" /><h2 className="text-2xl font-serif font-bold">Unsupported Format</h2><p className="opacity-70 mt-2">Only EPUB files can be fully simulated. Please convert your file.</p><button onClick={closeReader} className="mt-8 px-6 py-2 border-2 border-current rounded-full font-bold">Return to Library</button></div>
+                    )}
                   </div>
                 </div>
               )}
