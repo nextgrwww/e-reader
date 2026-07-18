@@ -325,6 +325,43 @@
             reader.readAsDataURL(file);
           };
 
+          const handleWordWiseUpload = (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentBook) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              try {
+                const json = JSON.parse(event.target.result);
+                // Normalize keys to lowercase for matching
+                const normalizedJson = {};
+                for (const key in json) {
+                  normalizedJson[key.toLowerCase()] = json[key];
+                }
+                
+                setWordWiseData(prev => {
+                    const updated = {...prev, [currentBook.id]: normalizedJson};
+                    wordWiseRef.current.data = updated; // Synchronize ref immediately
+                    return updated;
+                });
+                
+                setWordWiseEnabled(true);
+                wordWiseRef.current.enabled = true;
+                
+                // Manually trigger refresh to apply the newly uploaded dictionary
+                setTimeout(() => {
+                   if (renditionRef.current && renditionRef.current.location) {
+                     try { renditionRef.current.display(renditionRef.current.location.start.cfi); } catch(e){}
+                   }
+                }, 100);
+              } catch (err) {
+                console.error("Invalid Word Wise JSON", err);
+              }
+            };
+            reader.readAsText(file);
+            e.target.value = null; // Reset input
+          };
+
           const handleContextMenuAction = (action) => {
               if (!contextMenu || !currentBook) return;
               if (action === 'copy') {
